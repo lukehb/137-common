@@ -1,0 +1,89 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+apply plugin: 'com.jfrog.bintray'
+
+group 'onethreeseven'
+version '0.0.1'
+
+allprojects {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
+    apply plugin: 'java'
+    apply plugin: 'application'
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile group: 'com.google.code.findbugs', name: 'jsr305', version: '2.0.1'
+}
+
+jar {
+    manifest {
+        attributes("Implementation-Title": project.name,
+                "Implementation-Version": version,
+                'Built-By': System.getProperty('user.name'),
+                'Built-Date': new Date(),
+                'Built-JDK': System.getProperty('java.version'))
+    }
+}
+
+jar.dependsOn(test)
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+publishing {
+    publications {
+        MyPublication(MavenPublication) {
+            from components.java
+            groupId group
+            artifactId project.name
+            version version
+
+            Artifact sourcesJar
+        }
+    }
+}
+
+
+bintray {
+    user = project.hasProperty('bintrayUser') ? project.bintrayUser : System.getenv('BINTRAY_USER')
+    key = project.hasProperty('bintrayKey') ? project.bintrayKey : System.getenv('BINTRAY_KEY')
+    publications = ['MyPublication']
+    publish = true //If version should be auto published after an upload
+    pkg {
+        repo = '137-collections'
+        name = '137-collections'
+        licenses = ['MIT']
+        desc = 'Some data structures I wrote because the JDK didn\'t have what I needed.'
+        websiteUrl = 'https://github.com/lukehb/137-collections'
+        issueTrackerUrl = 'https://github.com/lukehb/137-collections/issues'
+        vcsUrl = 'https://github.com/lukehb/137-collections.git'
+        labels = ['137', 'java', 'collections', 'primitive']
+        publicDownloadNumbers = true
+        githubRepo = 'lukehb/137-collections'
+        githubReleaseNotesFile = 'README.md'
+    }
+}
+
+
+
