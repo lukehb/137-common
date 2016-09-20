@@ -71,16 +71,16 @@ bintray {
     publications = ['MyPublication']
     publish = true //If version should be auto published after an upload
     pkg {
-        repo = '137-collections'
-        name = '137-collections'
+        repo = '137-common'
+        name = '137-common'
         licenses = ['MIT']
-        desc = 'Some data structures I wrote because the JDK didn\'t have what I needed.'
-        websiteUrl = 'https://github.com/lukehb/137-collections'
-        issueTrackerUrl = 'https://github.com/lukehb/137-collections/issues'
-        vcsUrl = 'https://github.com/lukehb/137-collections.git'
-        labels = ['137', 'java', 'collections', 'primitive']
+        desc = 'Some common stuff I find useful in any Java project, maybe you will too?'
+        websiteUrl = 'https://github.com/lukehb/137-common'
+        issueTrackerUrl = 'https://github.com/lukehb/137-common/issues'
+        vcsUrl = 'https://github.com/lukehb/137-common.git'
+        labels = ['137', 'java', 'common', 'utilities']
         publicDownloadNumbers = true
-        githubRepo = 'lukehb/137-collections'
+        githubRepo = 'lukehb/137-common'
         githubReleaseNotesFile = 'README.md'
     }
 }
