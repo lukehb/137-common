@@ -20,16 +20,23 @@ public abstract class AbstractWriter<T> {
         this.delimiter = delimiter;
     }
 
-    public void write(File file, T t) {
+    public boolean write(File file, T t) {
         BufferedWriter bw = null;
         try {
-            if (file.createNewFile() && file.canWrite()) {
+            if(file.exists() && file.canWrite()){
+                logger.info("File already exists, going to append to it: " + file.getAbsolutePath());
+                bw = new BufferedWriter(new FileWriter(file, true));
+            }
+            //file does not exist
+            else if(file.createNewFile() && file.canWrite()){
                 bw = new BufferedWriter(new FileWriter(file));
-                write(bw, t);
             }
-            else{
-                logger.warning("A file already exists there, delete this first: " + file.getAbsolutePath());
+            if (bw == null) {
+                logger.warning("Could not write to file: " + file.getAbsolutePath());
+            }else{
+                return this.write(bw, t);
             }
+
         } catch (IOException e) {
             logger.severe("Could not create writer: " + e.getMessage());
         } finally {
@@ -41,6 +48,7 @@ public abstract class AbstractWriter<T> {
                 logger.severe("Could not close writer: " + e.getMessage());
             }
         }
+        return false;
     }
 
     /**
@@ -50,7 +58,7 @@ public abstract class AbstractWriter<T> {
      * @param t  the entity to write
      * @throws IOException Exception is thrown if writing to the file is not possible
      */
-    protected abstract void write(BufferedWriter bw, T t) throws IOException;
+    protected abstract boolean write(BufferedWriter bw, T t) throws IOException;
 
 
 }
