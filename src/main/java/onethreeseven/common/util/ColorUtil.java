@@ -56,7 +56,7 @@ public class ColorUtil {
      * @param min   min value in regard to value
      * @param max   max value in regard to value
      * @param value the value passed in
-     * @return a heat mapped (blue -> red) color
+     * @return a heat mapped color (blue equates to minimum values and red equates to maximum values).
      */
     public static Color generateHeatMapColor(double min, double max, double value) {
         assert value >= min && value <= max;

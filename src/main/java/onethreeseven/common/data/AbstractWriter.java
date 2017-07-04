@@ -52,11 +52,11 @@ public abstract class AbstractWriter<T> {
     }
 
     /**
-     * Write the entity to the file
-     *
-     * @param bw the writer to use
-     * @param t  the entity to write
-     * @throws IOException Exception is thrown if writing to the file is not possible
+     * Write an entity to a file.
+     * @param bw the writer to use.
+     * @param t  the entity to write.
+     * @return True if writing the entity was successful; otherwise, false.
+     * @throws IOException Exception is thrown if writing to the file is not possible.
      */
     protected abstract boolean write(BufferedWriter bw, T t) throws IOException;
 

@@ -17,9 +17,9 @@ import java.util.logging.Logger;
  */
 public abstract class AbstractLineBasedParser<T> {
 
-    private char[][] lineTerminators = null;
-    private int nLinesToSkip = 0;
-    private Consumer<Double> progressListener;
+    protected char[][] lineTerminators = null;
+    protected int nLinesToSkip = 0;
+    protected Consumer<Double> progressListener;
 
     public AbstractLineBasedParser(){
         progressListener = getDefaultProgressListener();
@@ -108,7 +108,8 @@ public abstract class AbstractLineBasedParser<T> {
     /**
      * If custom line terminators are set these are used in parsing instead
      * of the default \n \r or \n\r \r\n
-     * @param lineTerminators the custom line terminators to check for
+     * @param lineTerminators the custom line terminators to check for.
+     * @return A reference to this object. Useful for method chaining.
      */
     public AbstractLineBasedParser<T> setLineTerminators(char[][] lineTerminators) {
         this.lineTerminators = lineTerminators;
@@ -119,6 +120,7 @@ public abstract class AbstractLineBasedParser<T> {
      * Many data-sets have headers which are not useful for parsing.
      * We can skip those headers by specifying a number of lines to skip.
      * @param nLinesToSkip How many lines to skip.
+     * @return A reference to this object. Useful for method chaining.
      */
     public AbstractLineBasedParser<T> setnLinesToSkip(int nLinesToSkip) {
         this.nLinesToSkip = nLinesToSkip;
@@ -128,7 +130,8 @@ public abstract class AbstractLineBasedParser<T> {
     /**
      * Attach a progress listener to parsing a trajectory data-set.
      * Progress is reported as an int 1-100%
-     * @param progressListener the progress listener
+     * @param progressListener the progress listener.
+     * @return A reference to this object. Useful for method chaining.
      */
     public AbstractLineBasedParser<T> setProgressListener(Consumer<Double> progressListener) {
         this.progressListener = progressListener;
@@ -166,6 +169,7 @@ public abstract class AbstractLineBasedParser<T> {
      * @return The output resolve parsing.
      */
     protected abstract T done();
+
 
 
 }
