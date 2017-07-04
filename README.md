@@ -12,6 +12,6 @@ repositories {
 }
 
 dependencies {
-    compile 'onethreeseven:common:0.0.2'
+    compile 'onethreeseven:common:0.0.3'
 }
 ```
