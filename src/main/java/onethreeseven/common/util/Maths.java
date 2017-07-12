@@ -241,6 +241,22 @@ public final class Maths {
         return result;
     }
 
+    /**
+     * Find the area of a triangle defined by three points: a,b,c.
+     * @param ax X coordinate of point a.
+     * @param ay Y coordinate of point a.
+     * @param bx X coordinate of point b.
+     * @param by Y coordinate of point b.
+     * @param cx X coordinate of point c.
+     * @param cy Y coordinate of point c.
+     * @return The area of the triangle.
+     */
+    public static double triArea(double ax, double ay,
+                                 double bx, double by,
+                                 double cx, double cy){
+        return Math.abs((ax - cx) * (by - ay) - (ax - bx) * (cy - ay)) * 0.5;
+    }
+
     public static double triArea3D(double ax, double ay, double az,
                                    double bx, double by, double bz,
                                    double cx, double cy, double cz) {
