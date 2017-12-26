@@ -260,13 +260,112 @@ public final class Maths {
     public static double triArea3D(double ax, double ay, double az,
                                    double bx, double by, double bz,
                                    double cx, double cy, double cz) {
-        //2d
-        if (az == 0 && bz == 0 && cz == 0) {
-            return Math.abs((ax - cx) * (by - ay) - (ax - bx) * (cy - ay)) * 0.5;
-        }
-
         return 0.5 * Math.sqrt(dotSq(ax, ay, bx, by, cx, cy) +
                 dotSq(ax, az, bx, bz, cx, cz) + dotSq(ay, az, by, bz, cy, cz));
+    }
+
+    /**
+     * Returns the cross product of two 3d vectors.
+     * @param a 3d vector "a".
+     * @param b 3d vector "b".
+     * @return The cross product of a and b. In other words, the vector that is orthogonal to a and b.
+     */
+    public static double[] cross3d(double[] a, double[] b){
+        if(a.length != 3){
+            throw new IllegalArgumentException("Vector a length must equal 3.");
+        }
+        if(b.length != 3){
+            throw new IllegalArgumentException("Vector b length must equal 3.");
+        }
+        return new double[]{
+                a[1]*b[2] - a[2]*b[1],
+                a[2]*b[0] - a[0]*b[2],
+                a[0]*b[1] - a[1]*b[0]
+        };
+    }
+
+    /**
+     * Dot vector "a" against vector "b".
+     * That is, if a = [a1,a2,...,an] and b = [b1,b2,...,bn]
+     * then a dot b = a1*b1 + a2*b2 + ... + an*bn.
+     * @param a Vector a.
+     * @param b Vector b.
+     * @return The result of a dot b.
+     */
+    public static double dot(double[] a, double[] b){
+        if(a.length != b.length){
+            throw new IllegalArgumentException("Vector 'a' must have the same length as vector 'b'.");
+        }
+        double dotProduct = 0;
+        for (int i = 0; i < a.length; i++) {
+            dotProduct += a[i]*b[i];
+        }
+        return dotProduct;
+    }
+
+    /**
+     * Multiply every component in "a" by a scalar.
+     * @param a The vector "a".
+     * @param scalar The scalar.
+     * @return A new vector. Original "a" is not modified.
+     */
+    public static double[] scale(double[] a, double scalar){
+        double[] aPrime = new double[a.length];
+        for (int i = 0; i < a.length; i++) {
+            aPrime[i] = a[i] * scalar;
+        }
+        return aPrime;
+    }
+
+    /**
+     * Add vectors a and b together in a component-wise fashion.
+     * @param a Vector a.
+     * @param b Vector b.
+     * @return Return vector a plus vector b in a new vector.
+     */
+    public static double[] add(double[] a, double[] b){
+        if(a.length != b.length){
+            throw new IllegalArgumentException("Vector a and b must have the same lengths.");
+        }
+        double[] c = new double[a.length];
+        for (int i = 0; i < a.length; i++) {
+            c[i] = a[i] + b[i];
+        }
+        return c;
+    }
+
+    /**
+     * Get the perpendicular distance between a point and a line formed by two other points.
+     * @param start The start point of the line.
+     * @param end The end point of the line.
+     * @param otherPt The other point to get the perpendicular distance from.
+     * @return The perpendicular distance between the point and the line.
+     */
+    public static double perpendicularDistance(double[] start, double[] end, double[] otherPt){
+        if(start.length != end.length || start.length != otherPt.length){
+            throw new IllegalArgumentException("Vectors must have equal lengths.");
+        }
+        double[] projectedPt = projectAlong(start, end, otherPt);
+        return Maths.dist(otherPt, projectedPt);
+    }
+
+    /**
+     * Given a line formed by start and end points and some other point,
+     * project that other point onto the line.
+     * @param start The start point.
+     * @param end The end point.
+     * @param otherPt The other point.
+     * @return The point projected onto the line.
+     */
+    public static double[] projectAlong(double[] start, double[] end, double[] otherPt){
+        if(start.length != end.length || start.length != otherPt.length){
+            throw new IllegalArgumentException("Vectors must have equal lengths.");
+        }
+        double[] ab = Maths.sub(otherPt,start);
+        double[] ac = Maths.sub(end,start);
+        double percentageAlong = Maths.dot(ab, ac) / Maths.dot(ac, ac);
+        double[] amountMovedAC = Maths.scale(ac, percentageAlong);
+        return Maths.add(start, amountMovedAC);
     }
 
     private static double dotSq(double ax, double ay, double bx, double by, double cx, double cy) {

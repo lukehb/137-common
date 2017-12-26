@@ -1,6 +1,5 @@
 package onethreeseven.common.util;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -18,7 +17,7 @@ public final class Res {
 
     private String current;
 
-    public Res(@Nonnull String resourceFolder) {
+    public Res(String resourceFolder) {
         this.current = resourceFolder + "/";
     }
 
@@ -37,12 +36,12 @@ public final class Res {
      * @param file the thing to load, i.e style.css
      * @return A url to the resource
      */
-    public URL getUrl(@Nonnull String file) {
+    public URL getUrl(String file) {
         String resPath = append(file);
         return Thread.currentThread().getContextClassLoader().getResource(resPath);
     }
 
-    public File getFile(@Nonnull String file) {
+    public File getFile(String file) {
         try {
             return new File(getUrl(file).toURI());
         } catch (URISyntaxException e) {
@@ -50,7 +49,7 @@ public final class Res {
         }
     }
 
-    public InputStream getStream(@Nonnull String file) {
+    public InputStream getStream(String file) {
         String resPath = append(file);
         return Thread.currentThread().getContextClassLoader().getResourceAsStream(resPath);
     }

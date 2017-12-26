@@ -6,6 +6,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.function.Function;
 
 /**
@@ -15,16 +16,16 @@ import java.util.function.Function;
 public final class TimeUtil {
 
     private static final DateTimeFormatter fmt1 =
-            DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"); //17/06/1994 13:00:02;
+            DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss", Locale.ENGLISH); //17/06/1994 13:00:02;
 
     private static final DateTimeFormatter fmt2 =
-            DateTimeFormatter.ofPattern("dd/MM/yyyy h:mm a"); //16/08/2012 2:00 PM
+            DateTimeFormatter.ofPattern("dd/MM/yyyy h:mm a", Locale.ENGLISH); //16/08/2012 2:00 PM"
 
     private static final DateTimeFormatter fmt3 =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); //2007-04-12 16:39:48
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH); //2007-04-12 16:39:48
 
     private static  final DateTimeFormatter fmt4 =
-            DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss"); //19930513 16:39:48
+            DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss", Locale.ENGLISH); //19930513 16:39:48
 
     private static final DateTimeFormatter fmt5 =
             DateTimeFormatter.ISO_DATE_TIME; //2011-12-03T10:15:30+01:00
@@ -64,6 +65,7 @@ public final class TimeUtil {
                 }
                 return dateTime;
             } catch (Exception ignore) {
+
             }
         }
         return null;

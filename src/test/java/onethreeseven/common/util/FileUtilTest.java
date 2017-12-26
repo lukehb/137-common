@@ -3,8 +3,7 @@ package onethreeseven.common.util;
 import org.junit.Assert;
 import org.junit.Test;
 import java.io.File;
-import java.net.URI;
-import java.net.URL;
+import java.io.FileWriter;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -16,19 +15,27 @@ public class FileUtilTest {
 
     @Test
     public void testReadLineByLine() throws Exception {
-        URL url = new Res().getUrl("things");
-        URI uri = url.toURI();
-        File dataset = new File(uri);
+
+        //write a file with four lines
+        File tempFile = FileUtil.makeTempFile();
+        FileWriter fw = new FileWriter(tempFile);
+        fw.write("one\n");
+        fw.write("two\n");
+        fw.write("three\n");
+        fw.write("four");
+        fw.close();
+
         AtomicInteger linesProcessed = new AtomicInteger(0);
-        FileUtil.readLineByLine(dataset, FileUtil.getLineBreaks(), false, s -> {
+        FileUtil.readLineByLine(tempFile, FileUtil.getLineBreaks(), false, s -> {
             linesProcessed.incrementAndGet();
             System.out.println(s);
         });
         Assert.assertTrue(linesProcessed.get() == 4);
+        tempFile.deleteOnExit();
     }
 
     @Test
-    public void testMakeTmpFile() throws Exception {
+    public void testMakeTmpFile() {
         File tmpFile = FileUtil.makeTempFile();
         Assert.assertTrue(tmpFile.exists());
         Assert.assertTrue(FileUtil.fileOkayToRead(tmpFile));
@@ -40,7 +47,7 @@ public class FileUtilTest {
 
     @Test
     public void testMakeDir(){
-        File dir = FileUtil.makeAppDir("testing_" + + System.currentTimeMillis());
+        File dir = FileUtil.makeAppDir("testing_" + System.currentTimeMillis());
         System.out.println("Made: " + dir.getAbsolutePath());
         File testFile = new File(dir, "testfile.test");
         System.out.println("Made: " + testFile.getAbsolutePath());

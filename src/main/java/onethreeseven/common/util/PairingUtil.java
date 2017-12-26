@@ -1,6 +1,5 @@
 package onethreeseven.common.util;
 
-import javax.annotation.Nonnegative;
 
 /**
  * Utility for pairing functions.
@@ -18,7 +17,10 @@ public final class PairingUtil {
      * @param y The second coordinate.
      * @return The 1d representation.
      */
-    public static long from2dto1d(@Nonnegative int x, @Nonnegative int y){
+    public static long from2dto1d(int x, int y){
+        if(x < 0 || y < 0){
+            throw new IllegalArgumentException("Values must both be positive.");
+        }
         if (x >= y)
         {
             return (long)x * x + x + y;
@@ -35,7 +37,10 @@ public final class PairingUtil {
      * @param z The one dimensional coordinate to transform into two coordinates.
      * @return The 2d representation [0] = x and [1] = y.
      */
-    public static int[] from1dto2d(@Nonnegative long z){
+    public static int[] from1dto2d(long z){
+        if(z < 0){
+            throw new IllegalArgumentException("Value must be positive.");
+        }
         int[] pair = new int[2];
         double preciseZ = Math.sqrt(z);
         long floor = (long)Math.floor(preciseZ);

@@ -1,6 +1,5 @@
 package onethreeseven.common.model;
 
-import javax.annotation.Nonnull;
 import java.time.LocalDateTime;
 
 /**
@@ -12,8 +11,8 @@ public class TimeCategoryPool {
 
     private final TimeCategory[] potentialCategories;
 
-    public TimeCategoryPool(@Nonnull TimeCategory... timeCategories){
-        if(timeCategories.length == 0){
+    public TimeCategoryPool(TimeCategory... timeCategories){
+        if(timeCategories == null || timeCategories.length == 0){
             throw new IllegalArgumentException("Must have at least one time category.");
         }
         this.potentialCategories = timeCategories;
