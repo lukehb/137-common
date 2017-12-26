@@ -1,15 +1,6 @@
-buildscript {
-    repositories {
-        jcenter()
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
+plugins {
+    id "com.jfrog.bintray" version "1.7.3"
 }
-apply plugin: 'com.jfrog.bintray'
 
 group 'onethreeseven'
 version '0.0.4'
@@ -22,6 +13,7 @@ allprojects {
     apply plugin: 'maven'
     apply plugin: 'maven-publish'
     apply plugin: 'java'
+    apply plugin: 'java-library'
 }
 
 dependencies {
@@ -109,7 +101,6 @@ publishing {
         }
     }
 }
-
 
 bintray {
     user = project.hasProperty('bintrayUser') ? project.bintrayUser : System.getenv('BINTRAY_USER')
