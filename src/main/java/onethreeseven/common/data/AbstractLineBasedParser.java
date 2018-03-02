@@ -29,54 +29,44 @@ public abstract class AbstractLineBasedParser<T> {
      * Parse some input resolve a buffered stream into our output format.
      * @param br to read resolve
      * @param streamLength the length of the stream, or -1 if the size is unknown.
+     * @throws IOException When file cannot be found, or stream cannot be closed.
      * @return A collection of trajectories, or null if the stream could not be read.
      */
-    public T parse(BufferedReader br, double streamLength){
-        try{
+    public T parse(BufferedReader br, double streamLength) throws IOException {
+        String line;
+        final Charset charset = Charset.forName("UTF-8");
+        double processed = 0;
 
-            String line;
-            final Charset charset = Charset.forName("UTF-8");
-            double processed = 0;
+        int linesSkipped = 0;
+        StringBuilder sb = new StringBuilder();
 
-            int linesSkipped = 0;
-            StringBuilder sb = new StringBuilder();
+        //READING
+        while ((line = (lineTerminators == null) ?
+                br.readLine() :
+                FileUtil.readUntil(br, lineTerminators, sb, false)) != null) {
 
-            //READING
-            while ((line = (lineTerminators == null) ?
-                    br.readLine() :
-                    FileUtil.readUntil(br, lineTerminators, sb, false)) != null) {
-
-                processed += line.getBytes(charset).length;
-                //output progress to the listener
-                if (progressListener != null) {
-                    progressListener.accept(processed / streamLength);
-                }
-                if (nLinesToSkip != linesSkipped) {
-                    linesSkipped++;
-                } else {
-                    //PARSING
-                    parseLine(line);
-                }
+            processed += line.getBytes(charset).length;
+            //output progress to the listener
+            if (progressListener != null) {
+                progressListener.accept(processed / streamLength);
             }
-            //FINALISING
-            return done();
-        } catch (IOException e) {
-            Logger.getLogger(this.getClass().getSimpleName())
-                    .severe("File IO exception, " + e.getMessage());
-        }
-        finally {
-            //done reading close readers
-            try {
-                if (br != null) {
-                    br.close();
-                }
-            } catch (IOException ignore) {
+            if (nLinesToSkip != linesSkipped) {
+                linesSkipped++;
+            } else {
+                //PARSING
+                parseLine(line);
             }
         }
-        return null;
+
+        if (br != null) {
+            br.close();
+        }
+
+        //FINALISING
+        return done();
     }
 
-    public T parse(File dataset){
+    public T parse(File dataset) throws IOException {
 
         if(!isOkayToRead(dataset)){
             throw new IllegalArgumentException("Dataset either doesn't exist or doesn't have read permissions.");
@@ -86,23 +76,15 @@ public abstract class AbstractLineBasedParser<T> {
         BufferedReader br;
 
         //setup readers
-        try {
-            fr = new FileReader(dataset);
-            br = new BufferedReader(fr);
-            final long fileLength = dataset.length();
-            T output = parse(br, fileLength);
+        fr = new FileReader(dataset);
+        br = new BufferedReader(fr);
+        final long fileLength = dataset.length();
+        T output = parse(br, fileLength);
 
-            try {
-                fr.close();
-            } catch (IOException ignore) {
-            }
+        br.close();
+        fr.close();
 
-            return output;
-        } catch (FileNotFoundException e) {
-            Logger.getLogger(this.getClass().getSimpleName())
-                    .severe("File not found, " + e.getMessage());
-        }
-        return null;
+        return output;
     }
 
     /**
