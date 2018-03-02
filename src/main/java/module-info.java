@@ -1,4 +1,3 @@
-
 module onethreeseven.common {
     requires java.desktop;
     requires java.logging;
