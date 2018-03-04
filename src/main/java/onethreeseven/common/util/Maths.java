@@ -1,6 +1,7 @@
 package onethreeseven.common.util;
 
 import java.util.Arrays;
+import java.util.Random;
 
 
 /**
@@ -85,14 +86,24 @@ public final class Maths {
      * The euclidean distance between two n-d points (order doesn't matter).
      * @param a Point a
      * @param b Point b
-     * @return The euclidean distance between the point.
+     * @return The euclidean distance between two points.
      */
     public static double dist(double[] a, double[] b){
-        double sumSq = 0;
+        return Math.sqrt(Maths.distSq(a,b));
+    }
+
+    /**
+     * Returns the euclidean distance squared between two n-d points.
+     * @param a Point a.
+     * @param b Point b.
+     * @return The euclidean distance squared between two points.
+     */
+    public static double distSq(double[] a, double[] b){
+        double distSq = 0;
         for (int i = 0; i < a.length; i++) {
-            sumSq += Math.pow(a[i] - b[i], 2);
+            distSq += Math.pow(a[i] - b[i], 2);
         }
-        return Math.sqrt(sumSq);
+        return distSq;
     }
 
     /**
@@ -112,6 +123,18 @@ public final class Maths {
             total += v;
         }
         return total/d.length;
+    }
+
+    public static void shuffle(int[] array){
+        Random rand = new Random();
+        for (int i = array.length - 1; i > 0; i--)
+        {
+            int index = rand.nextInt(i + 1);
+            // Simple swap
+            int a = array[index];
+            array[index] = array[i];
+            array[i] = a;
+        }
     }
 
     public static double mean(double[] d){
