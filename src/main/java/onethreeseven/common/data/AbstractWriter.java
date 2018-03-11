@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 /**
  * An abstract writer which can be extended to write whatever object.
@@ -13,7 +12,6 @@ import java.util.logging.Logger;
  */
 public abstract class AbstractWriter<T> {
 
-    protected final Logger logger = Logger.getLogger(this.getClass().getSimpleName());
     protected String delimiter = ", ";
 
     public void setDelimiter(String delimiter) {
@@ -24,7 +22,7 @@ public abstract class AbstractWriter<T> {
         BufferedWriter bw = null;
         try {
             if(file.exists() && file.canWrite()){
-                logger.info("File already exists, going to append to it: " + file.getAbsolutePath());
+                //logger.info("File already exists, going to append to it: " + file.getAbsolutePath());
                 bw = new BufferedWriter(new FileWriter(file, true));
             }
             //file does not exist
@@ -32,20 +30,20 @@ public abstract class AbstractWriter<T> {
                 bw = new BufferedWriter(new FileWriter(file));
             }
             if (bw == null) {
-                logger.warning("Could not write to file: " + file.getAbsolutePath());
+                System.err.println("Could not write to file: " + file.getAbsolutePath());
             }else{
                 return this.write(bw, t);
             }
 
         } catch (IOException e) {
-            logger.severe("Could not create writer: " + e.getMessage());
+            e.printStackTrace();
         } finally {
             try {
                 if (bw != null) {
                     bw.close();
                 }
             } catch (IOException e) {
-                logger.severe("Could not close writer: " + e.getMessage());
+                e.printStackTrace();
             }
         }
         return false;

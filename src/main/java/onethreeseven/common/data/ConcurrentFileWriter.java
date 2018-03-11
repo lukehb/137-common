@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Logger;
 
 /**
  * Allows concurrently appending to a file.
@@ -19,7 +18,6 @@ public class ConcurrentFileWriter {
     private final FileWriter writer;
     private final ArrayBlockingQueue<String> toProcess;
     private final AtomicBoolean stillWriting = new AtomicBoolean(true);
-    private final Logger logger = Logger.getLogger(ConcurrentFileWriter.class.getSimpleName());
     private final Thread writerThread;
 
     public ConcurrentFileWriter(File toWriteTo, int maxConcurrentWrites) throws IOException {
@@ -41,10 +39,8 @@ public class ConcurrentFileWriter {
                         //wait to be woken up again
                         mon.wait();
                     }
-                } catch (IOException e) {
-                    logger.severe("IO exception writing to file: " + e.getMessage());
-                } catch (InterruptedException e) {
-                    logger.severe("Writer thread interrupted: " + e.getMessage());
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }, "Concurrent-File-Writer-" + System.currentTimeMillis());
@@ -74,14 +70,14 @@ public class ConcurrentFileWriter {
         try {
             writerThread.join();
         } catch (InterruptedException e) {
-            logger.severe("IO exception waiting for writer thread to finish: " + e.getMessage());
+            e.printStackTrace();
         }
 
         toProcess.clear();
         try {
             writer.close();
         } catch (IOException e) {
-            logger.severe("IO exception closing writer: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

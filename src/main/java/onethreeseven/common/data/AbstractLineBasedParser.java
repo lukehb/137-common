@@ -5,7 +5,6 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-import java.util.logging.Logger;
 
 /**
  * @author Luke Bermingham
@@ -127,13 +126,12 @@ public abstract class AbstractLineBasedParser<T> {
     protected Consumer<Double> getDefaultProgressListener(){
         final AtomicInteger progress = new AtomicInteger(0);
         final String fmt = "Parsed file %d%%";
-        final Logger logger = Logger.getLogger(this.getClass().getSimpleName());
 
         return progressValue -> {
             int clippedProgress = (int) (progressValue * 100);
             if (clippedProgress > progress.get()) {
                 progress.set(clippedProgress);
-                logger.info(String.format(fmt, clippedProgress));
+                System.out.println(String.format(fmt, clippedProgress));
             }
         };
     }

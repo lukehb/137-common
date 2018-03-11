@@ -5,7 +5,6 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 import java.util.function.Consumer;
-import java.util.logging.Logger;
 
 /**
  * Some useful utilities for dealing with files.
@@ -92,10 +91,8 @@ public final class FileUtil {
             while ((line = readUntil(br, terminators, sb, keepTerminators)) != null) {
                 readLineListener.accept(line);
             }
-        } catch (FileNotFoundException e) {
-            Logger.getLogger(FileUtil.class.getSimpleName()).severe("File not found: " + e.getMessage());
         } catch (IOException e) {
-            Logger.getLogger(FileUtil.class.getSimpleName()).severe("File IO exception: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -108,18 +105,17 @@ public final class FileUtil {
         String path = System.getProperty("java.io.tmpdir");
         String filename = path + File.separator + System.currentTimeMillis() + ".tmp";
         File tmpFile = new File(filename);
-        Logger logger = Logger.getLogger(FileUtil.class.getSimpleName());
         if (tmpFile.exists()) {
-            if (tmpFile.delete()) {
-                logger.info("Deleted tmp file: " + filename);
+            if (!tmpFile.delete()) {
+                tmpFile.deleteOnExit();
             }
         }
         try {
-            if (tmpFile.createNewFile()) {
-                logger.info("Created tmp file: " + filename);
+            if (!tmpFile.createNewFile()) {
+                System.err.println("Could not create temporary file at: " + tmpFile.getAbsolutePath());
             }
         } catch (IOException e) {
-            logger.severe("Could not create tmp file because: " + tmpFile);
+            e.printStackTrace();
         }
         return tmpFile;
     }
@@ -134,7 +130,7 @@ public final class FileUtil {
         String path = System.getProperty("java.io.tmpdir");
         File file = Paths.get(path, dirName).toFile();
         if(!file.exists() && !file.mkdir()){
-            Logger.getLogger(FileUtil.class.getSimpleName()).info("Could not create directory: " + file.getAbsolutePath());
+            System.err.println("Could not create directory: " + file.getAbsolutePath());
         }
         return file;
     }
@@ -175,7 +171,7 @@ public final class FileUtil {
                 }
             });
         } catch (IOException e) {
-            Logger.getLogger(FileUtil.class.getSimpleName()).severe("IO exception deleting directory: " + e.getMessage());
+            e.printStackTrace();
         }
         return true;
     }
@@ -210,6 +206,19 @@ public final class FileUtil {
             return fileName.substring(dotInd+1).toLowerCase();
 
 
+    }
+
+    /**
+     * Get the file name with the dot and extension stripped off.
+     * @param file The input file to get the name of.
+     * @return The file name.
+     */
+    public static String getFilenameOnly(File file){
+        String filename = file.getName();
+        if(filename.contains(".")){
+            return filename.substring(0, filename.lastIndexOf("."));
+        }
+        return null;
     }
 
 }
